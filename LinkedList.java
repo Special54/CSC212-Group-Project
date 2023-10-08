@@ -59,7 +59,7 @@ public class LinkedList<T> {
 		}
 	}
 
-	public T searchContact(String n) {
+	public T searchName(String n) {
 		Node<T> current = head;
 		while (current != null) {
 			if (((Contact) current.getData()).getName().equals(n)) {
@@ -129,43 +129,24 @@ public class LinkedList<T> {
 		if (empty())
 			return false;
 
-		boolean deleted = false;
 		Node<T> current = head;
-
 		while (current != null) {
 			if (((Contact) current.getData()).getName().equals(n)) {
 				if (head == current) {
 					head = current.getNext();
 				} else {
 					Node<T> prev = head;
-					while (prev.getNext() != current) {
+					while (prev.getNext() != current)
 						prev = prev.getNext();
-					}
 					prev.setNext(current.getNext());
 				}
-				deleted = true;
+				return true;
 			}
-			if (current.getData() instanceof Event) {
-				Event event = (Event) current.getData();
-				if (event.getContact().getName().equals(n)) {
-					if (head == current) {
-						head = current.getNext();
-					} else {
-						Node<T> prev = head;
-						while (prev.getNext() != current) {
-							prev = prev.getNext();
-						}
-						prev.setNext(current.getNext());
-					}
-					deleted = true;
-				}
-			}
-			if (deleted)
-				return deleted;
 			current = current.getNext();
 		}
 		return false;
 	}
+	
 
 	public Node<T> getHead() {
 		return head;
