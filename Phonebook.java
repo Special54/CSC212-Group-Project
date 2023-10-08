@@ -22,10 +22,9 @@ public class Phonebook {
 			return;
 		}
 		events.add(event);
-		System.out.println("Event scheduled successfully!\n");
+		System.out.println("\nEvent scheduled successfully!\n");
 	}
 
-	// Helper method to check for conflicts with existing events
 	private boolean hasEventConflict(Event newEvent) {
 		String newEventDate = newEvent.getDateTime();
 		Node<Event> current = events.getHead();
@@ -175,36 +174,50 @@ public class Phonebook {
 				case 1:
 					System.out.print("\nEnter the contact's name: ");
 					String Name = scanner.nextLine();
-					Contact foundContact = phonebook.contacts.searchName(Name);
-					if (foundContact != null) {
-						System.out.println("Contact found!");
-						foundContact.display();
+					if (phonebook.contacts.searchName(Name) != null) {
+						System.out.println("Contact(s) found!\n");
+						phonebook.contacts.searchName(Name).display();
 					} else
-						System.out.println("Contact with name: " + Name + " is not found.");
-
+						System.out.println("No contact found!");
 					break;
 				case 2:
 					System.out.print("\nEnter the contact's phone number: \n");
 					String num = scanner.nextLine();
-					phonebook.contacts.searchPhone(num);
+					if (phonebook.contacts.searchPhone(num) != null) {
+						System.out.println("Contact(s) found!\n");
+						phonebook.contacts.searchPhone(num).display();
+					} else
+						System.out.println("No contact found!");
 					break;
 				case 3:
 					System.out.print("\nEnter the contact's email address: \n");
 					String email2 = scanner.nextLine();
 					LinkedList<Contact> emailList = phonebook.contacts.searchEmail(email2);
-					emailList.print(emailList);
+					if (emailList != null) {
+						System.out.println("Contact(s) found!\n");
+						emailList.print(emailList);
+					} else
+						System.out.println("No contact found!");
 					break;
 				case 4:
 					System.out.print("Enter the contact's address: ");
 					String address2 = scanner.nextLine();
 					LinkedList<Contact> addressList = phonebook.contacts.searchEmail(address2);
-					addressList.print(addressList);
+					if (addressList != null) {
+						System.out.println("Contact(s) found!");
+						addressList.print(addressList);
+					} else
+						System.out.println("No contact found!");
 					break;
 				case 5:
 					System.out.print("Enter the contact's Birthday: ");
 					String day = scanner.nextLine();
 					LinkedList<Contact> dayList = phonebook.contacts.searchEmail(day);
-					dayList.print(dayList);
+					if (dayList != null) {
+						System.out.println("Contact(s) found!");
+						dayList.print(dayList);
+					} else
+						System.out.println("No contact found!");
 					break;
 				}
 				break;
