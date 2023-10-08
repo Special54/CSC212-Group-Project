@@ -25,36 +25,7 @@ public class Phonebook {
 		System.out.println("Event scheduled successfully!\n");
 	}
 
-	public boolean deleteEventsByContact(Contact contact) {
-		Node<Event> current = events.getHead();
-		Node<Event> prev = null;
-
-		while (current != null) {
-			if (current.getData().getContact() == contact) {
-				if (current == events.getHead()) {
-					events.setHead(current.getNext());
-				} else {
-					prev.setNext(current.getNext());
-				}
-			} else {
-				prev = current;
-			}
-			current = current.getNext();
-		}
-		return events.getHead() != null;
-	}
-
-	public boolean deleteContactAndEvents(String contactName) {
-		Contact contactToDelete = contacts.searchName(contactName);
-
-		if (contactToDelete != null) {
-			deleteEventsByContact(contactToDelete);
-			if (contacts.deleteContact(contactToDelete.getName()))
-				return true;
-		}
-		return false;
-	}
-
+	// Helper method to check for conflicts with existing events
 	private boolean hasEventConflict(Event newEvent) {
 		String newEventDate = newEvent.getDateTime();
 		Node<Event> current = events.getHead();
@@ -67,6 +38,35 @@ public class Phonebook {
 			current = current.getNext();
 		}
 
+		return false;
+	}
+
+	public boolean deleteEventsByContact(Contact contact) {
+		Node<Event> current = events.getHead();
+		Node<Event> prev = null;
+
+		while (current != null) {
+			if (current.getData().getContact().equals(contact)) {
+				if (current == events.getHead()) {
+					events.setHead(current.getNext());
+				} else {
+					prev.setNext(current.getNext());
+				}
+			} else {
+				prev = current;
+			}
+			current = current.getNext();
+		}
+		return true;
+	}
+
+	public boolean deleteContactAndEvents(String contactName) {
+		Contact contactToDelete = contacts.searchName(contactName);
+
+		if (contactToDelete != null && events.getHead() != null)
+			deleteEventsByContact(contactToDelete);
+		if (contacts.deleteContact(contactToDelete.getName()))
+			return true;
 		return false;
 	}
 
@@ -144,7 +144,6 @@ public class Phonebook {
 				scanner.nextLine();
 				continue;
 			}
-
 			switch (choice) {
 			case 1:
 				System.out.println("\nEnter the contact's name: ");
@@ -187,12 +186,7 @@ public class Phonebook {
 				case 2:
 					System.out.print("\nEnter the contact's phone number: \n");
 					String num = scanner.nextLine();
-					Contact foundContactNum = phonebook.contacts.searchPhone(num);
-					if (foundContactNum != null) {
-						System.out.println("Contact found!");
-						foundContactNum.display();
-					} else
-						System.out.println("Contact with phone number: " + num + " is not found.");
+					phonebook.contacts.searchPhone(num);
 					break;
 				case 3:
 					System.out.print("\nEnter the contact's email address: \n");
