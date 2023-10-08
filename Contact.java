@@ -1,6 +1,6 @@
 
 public class Contact implements Comparable<Contact> {
-	public String name, email, address, birthDay, notes, phoneNum;
+	private String name, email, address, birthDay, notes, phoneNum;
 	private LinkedList<Event> events;
 
 	public Contact(String name, String phoneNumber, String email, String address, String birthday, String notes) {
