@@ -156,4 +156,17 @@ public class LinkedList<T> {
 		this.head = head;
 	}
 
+	public void print(LinkedList<Contact> n) {
+		if (empty())
+			return;
+		Node<Contact> current = n.getHead();
+		if (current != null) {
+			while (current != null) {
+				current.getData().display();
+				current = current.getNext();
+			}
+		} else
+			System.out.println("No contacts found!");
+	}
+
 }
