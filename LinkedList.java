@@ -81,11 +81,11 @@ public class LinkedList<T> {
 
 	}
 
-	public Contact searchPhone(String p) {
+	public T searchPhone(String p) {
 		Node<T> current = head;
 		while (current != null) {
 			if (((Contact) current.getData()).getPhoneNum().equals(p)) {
-				return (Contact) current.getData();
+				return current.getData();
 			}
 			current = current.getNext();
 		}
@@ -146,7 +146,6 @@ public class LinkedList<T> {
 		}
 		return false;
 	}
-	
 
 	public Node<T> getHead() {
 		return head;
