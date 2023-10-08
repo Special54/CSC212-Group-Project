@@ -1,7 +1,6 @@
 
 public class Contact implements Comparable<Contact> {
 	private String name, email, address, birthDay, notes, phoneNum;
-	private LinkedList<Event> events;
 
 	public Contact(String name, String phoneNumber, String email, String address, String birthday, String notes) {
 		this.name = name;
@@ -10,11 +9,6 @@ public class Contact implements Comparable<Contact> {
 		this.address = address;
 		this.birthDay = birthday;
 		this.notes = notes;
-		this.events = new LinkedList<>();
-	}
-
-	public LinkedList<Event> getEvents() {
-		return events;
 	}
 
 	public int compareTo(Contact otherContact) {
