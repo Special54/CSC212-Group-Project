@@ -43,7 +43,7 @@ public class Event implements Comparable<Event> {
 	}
 
 	public String getContactName() {
-		return contact.name;
+		return contact.getName();
 	}
 
 	public void setContact(Contact contact) {
@@ -51,10 +51,10 @@ public class Event implements Comparable<Event> {
 	}
 
 	public void display() {
-		System.out.println("Event title: " + title);
+		System.out.println("\nEvent title: " + title);
 		System.out.println("Contact Name:  " + getContactName());
 		System.out.println("Event date and time (MM/DD/YYYY HH:MM): " + dateTime);
-		System.out.println("Event Location:  " + location);
+		System.out.println("Event Location:  " + location + "\n");
 
 	}
 
