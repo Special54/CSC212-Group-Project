@@ -55,7 +55,6 @@ public class Phonebook {
 		return false;
 	}
 
-	// Helper method to check for conflicts with existing events
 	private boolean hasEventConflict(Event newEvent) {
 		String newEventDate = newEvent.getDateTime();
 		Node<Event> current = events.getHead();
