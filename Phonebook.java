@@ -98,7 +98,6 @@ public class Phonebook {
 
 	public void printContactsByFirstName(String firstName) {
 		Node<Contact> current = contacts.getHead();
-
 		while (current != null) {
 			String fullName = current.getData().getName();
 			String[] nameParts = fullName.split(" ");
@@ -108,7 +107,6 @@ public class Phonebook {
 
 			current = current.getNext();
 		}
-
 	}
 
 	public void printAllEventsAlphabetically() {
@@ -201,35 +199,19 @@ public class Phonebook {
 					System.out.print("\nEnter the contact's email address: \n");
 					String email2 = scanner.nextLine();
 					LinkedList<Contact> emailList = phonebook.contacts.searchEmail(email2);
-					Node<Contact> current = emailList.getHead();
-					if (current != null) {
-						System.out.println("Contact(s) found!");
-						while (current != null) {
-							current.getData().display();
-							current = current.getNext();
-						}
-					} else
-						System.out.println("No contacts found with email address '" + email2 + "'");
+					emailList.print(emailList);
 					break;
 				case 4:
 					System.out.print("Enter the contact's address: ");
 					String address2 = scanner.nextLine();
 					LinkedList<Contact> addressList = phonebook.contacts.searchEmail(address2);
-					Node<Contact> current2 = addressList.getHead();
-					while (current2 != null) {
-						current2.getData().display();
-						current2 = current2.getNext();
-					}
+					addressList.print(addressList);
 					break;
 				case 5:
 					System.out.print("Enter the contact's Birthday: ");
 					String day = scanner.nextLine();
 					LinkedList<Contact> dayList = phonebook.contacts.searchEmail(day);
-					Node<Contact> current3 = dayList.getHead();
-					while (current3 != null) {
-						current3.getData().display();
-						current3 = current3.getNext();
-					}
+					dayList.print(dayList);
 					break;
 				}
 				break;
