@@ -17,7 +17,7 @@ public class Phonebook {
 			System.out.println("Contact does not exist in the phonebook. Event not scheduled.");
 			return;
 		}
-		if (hasEventConflict(event)) {
+		if (hasEventConflict(event, contact)) {
 			System.out.println("Event scheduling failed, conflict at: " + event.getDateTime());
 			return;
 		}
@@ -25,18 +25,19 @@ public class Phonebook {
 		System.out.println("\nEvent scheduled successfully!\n");
 	}
 
-	private boolean hasEventConflict(Event newEvent) {
+	private boolean hasEventConflict(Event newEvent, Contact contact) {
 		String newEventDate = newEvent.getDateTime();
 		Node<Event> current = events.getHead();
+		String existingEventDate;
+
 		while (current != null) {
-			String existingEventDate = current.getData().getDateTime();
-
-			if (newEventDate.equals(existingEventDate)) {
-				return true;
+			if (current.getData().getContact().equals(contact)) {
+				existingEventDate = current.getData().getDateTime();
+				if (newEventDate.equals(existingEventDate))
+					return true;
+				current = current.getNext();
 			}
-			current = current.getNext();
 		}
-
 		return false;
 	}
 
