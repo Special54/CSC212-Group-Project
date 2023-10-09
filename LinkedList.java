@@ -1,6 +1,7 @@
 
 public class LinkedList<T> {
 	private Node<T> head;
+	private Node<T> current;
 
 	public LinkedList() {
 		head = null;
@@ -43,8 +44,9 @@ public class LinkedList<T> {
 	public void add(T data) {
 		if (data instanceof Event) {
 			Node<T> newNode = new Node<>(data);
-
-			if (head == null || ((Event) data).getTitle().compareTo(((Event) head.getData()).getTitle()) < 0) {
+			if (empty())
+				current = head = newNode;
+			else if (((Event) data).getTitle().compareTo(((Event) head.getData()).getTitle()) < 0) {
 				newNode.setNext(head);
 				head = newNode;
 			} else {
