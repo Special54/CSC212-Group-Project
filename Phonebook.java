@@ -2,44 +2,9 @@ import java.util.InputMismatchException;
 import java.util.Scanner;
 
 public class Phonebook {
-	private LinkedList<Contact> contacts;
-	private LinkedList<Event> events;
-
-	public Phonebook() {
-		contacts = new LinkedList<Contact>();
-		events = new LinkedList<Event>();
-	}
-
-	public void addEvent(Event event) {
-		String contactName = event.getContactName();
-		Contact contact = contacts.searchName(contactName);
-		if (contact == null) {
-			System.out.println("Contact does not exist in the phonebook. Event not scheduled.");
-			return;
-		}
-		if (hasEventConflict(event, contact)) {
-			System.out.println("Event scheduling failed, conflict at: " + event.getDateTime());
-			return;
-		}
-		events.add(event);
-		System.out.println("\nEvent scheduled successfully!\n");
-	}
-
-	private boolean hasEventConflict(Event newEvent, Contact contact) {
-		String newEventDate = newEvent.getDateTime();
-		Node<Event> current = events.getHead();
-		String existingEventDate;
-
-		while (current != null) {
-			if (current.getData().getContact().equals(contact)) {
-				existingEventDate = current.getData().getDateTime();
-				if (newEventDate.equals(existingEventDate))
-					return true;
-				current = current.getNext();
-			}
-		}
-		return false;
-	}
+	private static LinkedList<Contact> contacts = new LinkedList<Contact>();
+	private static LinkedList<Event> events = new LinkedList<Event>();
+	public static Scanner scanner = new Scanner(System.in);
 
 	public boolean deleteEventsByContact(Contact contact) {
 		Node<Event> current = events.getHead();
@@ -81,18 +46,7 @@ public class Phonebook {
 			}
 			current = current.getNext();
 		}
-
 		return contactEvents;
-	}
-
-	public void printAllContactsSharingEvent(Event event) {
-		Node<Event> current = events.getHead();
-		while (current != null) {
-			if (event.getTitle().equals(current.getData().getTitle()))
-				current.getData().getContact().display();
-			current = current.getNext();
-		}
-
 	}
 
 	public void printContactsByFirstName(String firstName) {
@@ -117,8 +71,16 @@ public class Phonebook {
 		}
 	}
 
+	public void printAllContactsSharingEvent(Event event) {
+		Node<Event> current = events.getHead();
+		while (current != null) {
+			if (event.getTitle().equals(current.getData().getTitle()))
+				current.getData().getContact().display();
+			current = current.getNext();
+		}
+	}
+
 	public static void main(String[] args) {
-		Scanner scanner = new Scanner(System.in);
 		Phonebook phonebook = new Phonebook();
 
 		System.out.println("Welcome to the Linked Tree Phonebook!");
@@ -132,7 +94,8 @@ public class Phonebook {
 			System.out.println("5. Print event details");
 			System.out.println("6. Print contacts by first name");
 			System.out.println("7. Print all events alphabetically");
-			System.out.println("8. Exit\n");
+			System.out.println("8. Print all Contacts sharing Event");
+			System.out.println("9. Exit\n");
 
 			System.out.print("Enter your choice: ");
 			int choice;
@@ -140,7 +103,7 @@ public class Phonebook {
 				choice = scanner.nextInt();
 				scanner.nextLine();
 			} catch (InputMismatchException e) {
-				System.out.println("Invalid input. Please enter a valid option.");
+				System.out.println("Invalid input. Please enter a valid option. (1-9)");
 				scanner.nextLine();
 				continue;
 			}
@@ -159,7 +122,7 @@ public class Phonebook {
 				System.out.println("Enter any notes for the contact: ");
 				String notes = scanner.nextLine();
 				Contact contact = new Contact(name, pNumber, email, address, birthday, notes);
-				phonebook.contacts.addContact(contact);
+				contacts.add(contact);
 				break;
 			case 2:
 				System.out.println("\nEnter search criteria: ");
@@ -175,51 +138,38 @@ public class Phonebook {
 				case 1:
 					System.out.print("\nEnter the contact's name: ");
 					String Name = scanner.nextLine();
-					if (phonebook.contacts.searchName(Name) != null) {
+					if (contacts.searchName(Name) != null) {
 						System.out.println("Contact(s) found!\n");
-						phonebook.contacts.searchName(Name).display();
+						contacts.searchName(Name).display();
 					} else
-						System.out.println("No contact found!");
+						System.out.println("Contact not found!");
 					break;
 				case 2:
 					System.out.print("\nEnter the contact's phone number: \n");
 					String num = scanner.nextLine();
-					if (phonebook.contacts.searchPhone(num) != null) {
+					if (contacts.searchPhone(num) != null) {
 						System.out.println("Contact(s) found!\n");
-						phonebook.contacts.searchPhone(num).display();
+						contacts.searchPhone(num).display();
 					} else
-						System.out.println("No contact found!");
+						System.out.println("Contact not found!");
 					break;
 				case 3:
 					System.out.print("\nEnter the contact's email address: \n");
 					String email2 = scanner.nextLine();
-					LinkedList<Contact> emailList = phonebook.contacts.searchEmail(email2);
-					if (emailList != null) {
-						System.out.println("Contact(s) found!\n");
-						emailList.print(emailList);
-					} else
-						System.out.println("No contact found!");
+					contacts.searchEmail(email2);
 					break;
 				case 4:
 					System.out.print("Enter the contact's address: ");
 					String address2 = scanner.nextLine();
-					LinkedList<Contact> addressList = phonebook.contacts.searchEmail(address2);
-					if (addressList != null) {
-						System.out.println("Contact(s) found!");
-						addressList.print(addressList);
-					} else
-						System.out.println("No contact found!");
+					contacts.searchAddress(address2);
 					break;
 				case 5:
 					System.out.print("Enter the contact's Birthday: ");
 					String day = scanner.nextLine();
-					LinkedList<Contact> dayList = phonebook.contacts.searchEmail(day);
-					if (dayList != null) {
-						System.out.println("Contact(s) found!");
-						dayList.print(dayList);
-					} else
-						System.out.println("No contact found!");
+					contacts.searchBirthday(day);
 					break;
+				default:
+					System.out.println("Invalid choice. Please choose a valid option. (1-5)");
 				}
 				break;
 			case 3:
@@ -236,13 +186,13 @@ public class Phonebook {
 				String title = scanner.nextLine();
 				System.out.println("Enter contact name: ");
 				String contactName = scanner.nextLine();
-				Contact contact2 = phonebook.contacts.searchName(contactName);
+				Contact contact2 = contacts.searchName(contactName);
 				System.out.println("Enter event date and time (MM/DD/YYYY HH:MM): ");
 				String dateAndTime = scanner.nextLine();
 				System.out.println("Enter event location: ");
 				String location = scanner.nextLine();
 				Event event = new Event(title, contact2, dateAndTime, location);
-				phonebook.addEvent(event);
+				events.add(event);
 				break;
 			case 5:
 				System.out.println("\nEnter search criteria: ");
@@ -271,15 +221,15 @@ public class Phonebook {
 				case 2:
 					System.out.println("\nEnter the event title: ");
 					String name2 = scanner.nextLine();
-					Event foundEvent = phonebook.events.searchTitle(name2);
+					Event foundEvent = events.searchTitle(name2);
 					if (foundEvent != null) {
 						foundEvent.display();
 					} else {
-						System.out.println("Event not found.");
+						System.out.println("Event not found.\n");
 					}
 					break;
 				default:
-					System.out.println("Invalid criteria");
+					System.out.println("Invalid choice. Please choose a valid option. (1-2)");
 				}
 				break;
 			case 6:
@@ -288,13 +238,22 @@ public class Phonebook {
 				phonebook.printContactsByFirstName(fName);
 				break;
 			case 7:
-				if (phonebook.events.getHead() != null) {
+				if (events.getHead() != null) {
 					System.out.println("Events found!\n");
 					phonebook.printAllEventsAlphabetically();
 				} else
 					System.out.println("No events found!");
 				break;
 			case 8:
+				System.out.println("\nEnter the event title: ");
+				String eventTitle = scanner.nextLine();
+				Event event1 = events.searchTitle(eventTitle);
+				if (event1 != null)
+					phonebook.printAllContactsSharingEvent(event1);
+				else
+					System.out.println("Event not found!\n");
+				break;
+			case 9:
 				System.out.println("Goodbye!");
 				System.exit(0);
 				break;
