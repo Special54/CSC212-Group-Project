@@ -29,6 +29,7 @@ public class LinkedList<T> {
 			if (newEvent.getContact() != null) {
 				String newEventTitle = newEvent.getTitle();
 				String newEventDateTime = newEvent.getDateTime();
+
 				if (empty()) {
 					head = newNode;
 				} else if (newEventTitle.compareTo(((Event) head.getData()).getTitle()) < 0) {
@@ -43,8 +44,8 @@ public class LinkedList<T> {
 					head = newNode;
 					System.out.println("\nEvent scheduled successfully!\n");
 				} else {
-					Node<T> current = head;
-					Node<T> prev = null;
+					Node<T> current = head.getNext();
+					Node<T> prev = head;
 
 					while (current != null) {
 						Event currentEvent = (Event) current.getData();
@@ -117,15 +118,19 @@ public class LinkedList<T> {
 
 	}
 
-	public T searchPhone(String p) {
+	public void searchPhone(String p) {
 		current = head;
-		while (current != null) {
-			if (((Contact) current.getData()).getPhoneNum().equals(p)) {
-				return current.getData();
+		if (current != null) {
+			System.out.println("Contact found!\n");
+			while (current != null) {
+				if (((Contact) current.getData()).getPhoneNum().equals(p)) {
+					((Contact) current.getData()).display();
+				}
+				current = current.getNext();
 			}
-			current = current.getNext();
-		}
-		return null;
+		} else
+			System.out.println("Contact not found!");
+
 	}
 
 	public void searchEmail(String e) {
@@ -135,7 +140,6 @@ public class LinkedList<T> {
 			while (current != null) {
 				if (((Contact) current.getData()).getEmail().equals(e))
 					((Contact) current.getData()).display();
-
 				current = current.getNext();
 			}
 		} else
@@ -176,7 +180,7 @@ public class LinkedList<T> {
 		current = head;
 		while (current != null) {
 			if (((Contact) current.getData()).getName().equals(n)) {
-				if (head == current) {
+				if (current == head) {
 					head = current.getNext();
 				} else {
 					Node<T> prev = head;
@@ -189,19 +193,6 @@ public class LinkedList<T> {
 			current = current.getNext();
 		}
 		return false;
-	}
-
-	public void print(LinkedList<Contact> n) {
-		if (empty())
-			return;
-		Node<Contact> current = n.getHead();
-		if (current != null) {
-			while (current != null) {
-				current.getData().display();
-				current = current.getNext();
-			}
-		} else
-			System.out.println("No contacts found!");
 	}
 
 	public Node<T> getHead() {
