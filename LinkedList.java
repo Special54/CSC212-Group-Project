@@ -71,7 +71,6 @@ public class LinkedList<T> {
 						current = current.getNext();
 					}
 					prev.setNext(newNode);
-					System.out.println("\nEvent scheduled successfully!\n");
 				}
 			} else
 				System.out.println("Contact not found in the contacts' list!");
@@ -99,7 +98,7 @@ public class LinkedList<T> {
 	public Contact searchName(String n) {
 		current = head;
 		while (current != null) {
-			if (((Contact) current.getData()).getName().equals(n)) {
+			if (((Contact) current.getData()).getName().equalsIgnoreCase(n)) {
 				return (Contact) current.getData();
 			}
 			current = current.getNext();
@@ -110,12 +109,11 @@ public class LinkedList<T> {
 	public Event searchTitle(String t) {
 		current = head;
 		while (current != null) {
-			if (((Event) current.getData()).getTitle().equals(t))
+			if (((Event) current.getData()).getTitle().equalsIgnoreCase(t))
 				return (Event) current.getData();
 			current = current.getNext();
 		}
 		return null;
-
 	}
 
 	public void searchPhone(String p) {
@@ -123,7 +121,7 @@ public class LinkedList<T> {
 		if (current != null) {
 			System.out.println("Contact found!\n");
 			while (current != null) {
-				if (((Contact) current.getData()).getPhoneNum().equals(p)) {
+				if (((Contact) current.getData()).getPhoneNum().equalsIgnoreCase(p)) {
 					((Contact) current.getData()).display();
 				}
 				current = current.getNext();
@@ -138,7 +136,7 @@ public class LinkedList<T> {
 		if (current != null) {
 			System.out.println("Contact(s) found!\n");
 			while (current != null) {
-				if (((Contact) current.getData()).getEmail().equals(e))
+				if (((Contact) current.getData()).getEmail().equalsIgnoreCase(e))
 					((Contact) current.getData()).display();
 				current = current.getNext();
 			}
@@ -151,7 +149,7 @@ public class LinkedList<T> {
 		if (current != null) {
 			System.out.println("Contact(s) found!\n");
 			while (current != null) {
-				if (((Contact) current.getData()).getAddress().equals(a))
+				if (((Contact) current.getData()).getAddress().equalsIgnoreCase(a))
 					((Contact) current.getData()).display();
 				current = current.getNext();
 			}
@@ -165,7 +163,7 @@ public class LinkedList<T> {
 		if (current != null) {
 			System.out.println("Contact(s) found!\n");
 			while (current != null) {
-				if (((Contact) current.getData()).getBirthDay().equals(b))
+				if (((Contact) current.getData()).getBirthDay().equalsIgnoreCase(b))
 					((Contact) current.getData()).display();
 				current = current.getNext();
 			}
@@ -179,7 +177,7 @@ public class LinkedList<T> {
 
 		current = head;
 		while (current != null) {
-			if (((Contact) current.getData()).getName().equals(n)) {
+			if (((Contact) current.getData()).getName().equalsIgnoreCase(n)) {
 				if (current == head) {
 					head = current.getNext();
 				} else {
