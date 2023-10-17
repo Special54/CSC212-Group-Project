@@ -117,9 +117,10 @@ public class Phonebook {
 		System.out.println("Enter event location: ");
 		String location = scanner.nextLine();
 		Event event = new Event(title, contact, dateAndTime, location);
-		events.add(event);
-		contact.addContactEvent(event);
-		System.out.println("\nEvent scheduled successfully!\n");
+
+		if (events.add(event)) {
+			contact.addContactEvent(event);
+		}
 	}
 
 	public static void printEvent() {
@@ -172,8 +173,9 @@ public class Phonebook {
 					current.getData().display();
 
 				current = current.getNext();
-			} else
-				System.out.println("\nNo contact(s) found.\n");
+			}
+		else
+			System.out.println("\nNo contact(s) found.\n");
 
 	}
 
