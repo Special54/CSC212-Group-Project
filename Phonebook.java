@@ -118,9 +118,9 @@ public class Phonebook {
 		String location = scanner.nextLine();
 		Event event = new Event(title, contact, dateAndTime, location);
 
-		if (events.add(event)) {
+		if (events.add(event))
 			contact.addContactEvent(event);
-		}
+
 	}
 
 	public static void printEvent() {
@@ -140,15 +140,16 @@ public class Phonebook {
 			System.out.println("\nEnter the contact's name: ");
 			String contactName = scanner.nextLine();
 			Contact contact = contacts.searchName(contactName);
-			if (contact != null)
+			if (contact != null) {
 				contact.getEvents();
-			else
+			} else
 				System.out.println("Contact not found!");
 			break;
 		case 2:
 			System.out.println("\nEnter the event title: ");
 			String eventTitle = scanner.nextLine();
 			Event foundEvent = events.searchTitle(eventTitle);
+
 			if (foundEvent != null) {
 				foundEvent.display();
 			} else {
