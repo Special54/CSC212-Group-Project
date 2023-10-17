@@ -1,6 +1,8 @@
 
 public class Contact implements Comparable<Contact> {
 	private String name, email, address, birthDay, notes, phoneNum;
+	private LinkedList<Event> contactEvents;
+	private Node<Event> head;
 
 	public Contact(String name, String phoneNumber, String email, String address, String birthday, String notes) {
 		this.name = name;
@@ -9,6 +11,26 @@ public class Contact implements Comparable<Contact> {
 		this.address = address;
 		this.birthDay = birthday;
 		this.notes = notes;
+		contactEvents = new LinkedList<>();
+		head = null;
+	}
+
+	public void addContactEvent(Event event) {
+		Node<Event> newNode = new Node<>(event);
+		newNode.setNext(head);
+		head = newNode;
+	}
+
+	public void getEvents() {
+		Node<Event> current = head;
+		while (current != null ) {
+			current.getData().display();
+			current = current.getNext();
+		}
+	}
+
+	public void setHead(Node<Event> head) {
+		this.head = head;
 	}
 
 	public int compareTo(Contact otherContact) {
