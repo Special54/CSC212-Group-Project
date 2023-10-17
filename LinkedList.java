@@ -1,210 +1,270 @@
+import java.util.InputMismatchException;
+import java.util.Scanner;
 
-public class LinkedList<T> {
-	private Node<T> head;
-	private Node<T> current;
+public class Phonebook {
+	private static LinkedList<Contact> contacts = new LinkedList<Contact>();
+	private static LinkedList<Event> events = new LinkedList<Event>();
+	public static Scanner scanner = new Scanner(System.in);
 
-	public LinkedList() {
-		head = null;
+	public static void addContact() {
+		System.out.println("\nEnter the contact's name: ");
+		String name = scanner.nextLine();
+		System.out.println("Enter the contact's phone number: ");
+		String number = scanner.nextLine();
+		System.out.println("Enter the contact's email address: ");
+		String email = scanner.nextLine();
+		System.out.println("Enter the contact's address: ");
+		String address = scanner.nextLine();
+		System.out.println("Enter the contact's birthday: ");
+		String birthday = scanner.nextLine();
+		System.out.println("Enter any notes for the contact: ");
+		String notes = scanner.nextLine();
+		Contact contact = new Contact(name, number, email, address, birthday, notes);
+		contacts.add(contact);
+		System.out.println("\nContact added!\n");
 	}
 
-	public boolean empty() {
-		return head == null;
+	public static void searchContacts() {
+		System.out.println("\nEnter search criteria: ");
+		System.out.println("1. Contact name");
+		System.out.println("2. Phone Number");
+		System.out.println("3. Email Address");
+		System.out.println("4. Address");
+		System.out.println("5. Birthday\n");
+		System.out.print("Enter your choice: ");
+		int criteria = 0;
+		try {
+			criteria = scanner.nextInt();
+			scanner.nextLine();
+		} catch (InputMismatchException e) {
+			scanner.nextLine();
+		}
+		switch (criteria) {
+		case 1:
+			System.out.print("\nEnter the contact's name: ");
+			String Name = scanner.nextLine();
+			if (contacts.searchName(Name) != null) {
+				System.out.println("Contact found!\n");
+				contacts.searchName(Name).display();
+			} else
+				System.out.println("Contact not found!");
+			break;
+		case 2:
+			System.out.print("\nEnter the contact's phone number: \n");
+			String number = scanner.nextLine();
+			contacts.searchPhone(number);
+			break;
+		case 3:
+			System.out.print("\nEnter the contact's email address: \n");
+			String email = scanner.nextLine();
+			contacts.searchEmail(email);
+			break;
+		case 4:
+			System.out.print("Enter the contact's address: ");
+			String address = scanner.nextLine();
+			contacts.searchAddress(address);
+			break;
+		case 5:
+			System.out.print("Enter the contact's Birthday: ");
+			String day = scanner.nextLine();
+			contacts.searchBirthday(day);
+			break;
+		default:
+			System.out.println("Invalid choice. Please choose a valid option. (1-5)");
+		}
 	}
 
-	private boolean isContactUnique(T data) {
-		current = head;
+	public static boolean deleteEventsByContact(Contact contact) {
+		Node<Event> current = events.getHead();
+		Node<Event> prev = null;
+
 		while (current != null) {
-			if (current.getData().equals(data)) {
-				return false;
+			if (current.getData().getContact().equals(contact)) {
+				if (current == events.getHead()) {
+					events.setHead(current.getNext());
+				} else {
+					prev.setNext(current.getNext());
+				}
+			} else {
+				prev = current;
 			}
 			current = current.getNext();
 		}
 		return true;
 	}
 
-	public boolean add(T data) {
-		if (data instanceof Event) {
-			Event newEvent = (Event) data;
-			Node<T> newNode = new Node<>(data);
-			if (newEvent.getContact() != null) {
-				String newEventTitle = newEvent.getTitle();
-				String newEventDateTime = newEvent.getDateTime();
-				if (empty()) {
-					head = newNode;
-					System.out.println("\nEvent scheduled successfully!\n");
-					return true;
-				} else if (newEventTitle.compareTo(((Event) head.getData()).getTitle()) < 0) {
-					if (newEvent.getContact().equals(((Event) head.getData()).getContact())) {
-						String existingEventDate = ((Event) head.getData()).getDateTime();
-						if (existingEventDate.equals(newEventDateTime)) {
-							System.out.println("Event scheduling failed because its conflicting with another event.");
-							return false;
-						}
-					}
-					newNode.setNext(head);
-					head = newNode;
-					System.out.println("\nEvent scheduled successfully!\n");
-					return true;
-				} else {
-					Node<T> current = head;
-					Node<T> prev = null;
+	public static void deleteContact() {
+		System.out.println("\nEnter the contact's name: ");
+		String contactName = scanner.nextLine();
+		Contact contactToDelete = contacts.searchName(contactName);
+		if (contactToDelete != null && events.getHead() != null)
+			deleteEventsByContact(contactToDelete);
+		if (contacts.deleteContact(contactName)) {
+			System.out.println("Contact and related events (if any) are deleted successfully!\n");
+		} else {
+			System.out.println("Delete unsuccessful.\n");
+		}
+	}
 
-					while (current != null) {
-						Event currentEvent = (Event) current.getData();
-						String currentEventTitle = currentEvent.getTitle();
-						String currentEventDateTime = currentEvent.getDateTime();
-						if (newEvent.getContact().equals(currentEvent.getContact())
-								&& newEventDateTime.equals(currentEventDateTime)) {
-							System.out.println("Event scheduling failed: conflicting with another event.");
-							return false;
-						}
-						if (newEventTitle.compareTo(currentEventTitle) < 0) {
-							if (prev == null) {
-								newNode.setNext(head);
-								head = newNode;
-							} else {
-								prev.setNext(newNode);
-								newNode.setNext(current);
-							}
-							System.out.println("\nEvent scheduled successfully!\n");
-							return true;
-						}
-						prev = current;
-						current = current.getNext();
-					}
-					prev.setNext(newNode);
-				}
+	public static void addEvent() {
+		System.out.println("\nEnter event title: ");
+		String title = scanner.nextLine();
+		System.out.println("Enter contact name: ");
+		String contactName = scanner.nextLine();
+		Contact contact = contacts.searchName(contactName);
+		System.out.println("Enter event date and time (MM/DD/YYYY HH:MM): ");
+		String dateAndTime = scanner.nextLine();
+		System.out.println("Enter event location: ");
+		String location = scanner.nextLine();
+		Event event = new Event(title, contact, dateAndTime, location);
+
+		if (events.add(event)) {
+			contact.addContactEvent(event);
+		}
+	}
+
+	public static void printEvent() {
+		System.out.println("\nEnter search criteria: ");
+		System.out.println("1.Contact name");
+		System.out.println("2.Event title\n");
+		System.out.print("Enter your choice: ");
+		int criteria = 0;
+		try {
+			criteria = scanner.nextInt();
+			scanner.nextLine();
+		} catch (InputMismatchException e) {
+			scanner.nextLine();
+		}
+		switch (criteria) {
+		case 1:
+			System.out.println("\nEnter the contact's name: ");
+			String contactName = scanner.nextLine();
+			Contact contact = contacts.searchName(contactName);
+			if (contact != null)
+				contact.getEvents();
+			else
+				System.out.println("Contact not found!");
+			break;
+		case 2:
+			System.out.println("\nEnter the event title: ");
+			String eventTitle = scanner.nextLine();
+			Event foundEvent = events.searchTitle(eventTitle);
+			if (foundEvent != null) {
+				foundEvent.display();
 			} else {
-				System.out.println("Contact not found in the contacts' list!");
-				return false;
+				System.out.println("Event not found.\n");
 			}
+			break;
+		default:
+			System.out.println("Invalid choice. Please choose a valid option. (1-2)");
 		}
-		if (data instanceof Contact) {
-			if (isContactUnique(data)) {
-				Node<T> newNode = new Node<T>(data);
-				Node<T> current = head;
-				if (empty() || ((Contact) data).compareTo((Contact) current.getData()) < 0) {
-					newNode.setNext(head);
-					head = newNode;
-					return true;
-				} else {
-					while (current.getNext() != null
-							&& ((Contact) data).compareTo((Contact) current.getNext().getData()) >= 0) {
-						current = current.getNext();
-					}
-					newNode.setNext(current.getNext());
-					current.setNext(newNode);
-					return true;
-				}
-			}
-		}
-		return false;
 	}
 
-	public Contact searchName(String n) {
-		current = head;
-		while (current != null) {
-			if (((Contact) current.getData()).getName().equalsIgnoreCase(n)) {
-				return (Contact) current.getData();
-			}
-			current = current.getNext();
-		}
-		return null;
-	}
-
-	public Event searchTitle(String t) {
-		current = head;
-		while (current != null) {
-			if (((Event) current.getData()).getTitle().equalsIgnoreCase(t))
-				return (Event) current.getData();
-			current = current.getNext();
-		}
-		return null;
-	}
-
-	public void searchPhone(String p) {
-		current = head;
-		if (current != null) {
-			System.out.println("Contact found!\n");
+	public static void printContactsByFirstName() {
+		System.out.println("\nEnter the first name: ");
+		String firstName = scanner.nextLine();
+		Node<Contact> current = contacts.getHead();
+		if (current != null)
 			while (current != null) {
-				if (((Contact) current.getData()).getPhoneNum().equalsIgnoreCase(p)) {
-					((Contact) current.getData()).display();
-					return;
-				}
+				String fullName = current.getData().getName();
+				String[] nameParts = fullName.split(" ");
+
+				if (nameParts.length > 0 && nameParts[0].equalsIgnoreCase(firstName))
+					current.getData().display();
+
+				current = current.getNext();
+			}
+		else
+			System.out.println("\nNo contact(s) found.\n");
+
+	}
+
+	public static void printAllEventsAlphabetically() {
+		if (events.getHead() != null) {
+			System.out.println("Events found!\n");
+			Node<Event> current = events.getHead();
+
+			while (current != null) {
+				current.getData().display();
 				current = current.getNext();
 			}
 		} else
-			System.out.println("\nContact not found!\n");
-
+			System.out.println("\nNo events found!\n");
 	}
 
-	public void searchEmail(String e) {
-		current = head;
-		if (current != null) {
-			System.out.println("Contact(s) found!\n");
+	public static void printAllContactsSharingEvent() {
+		System.out.println("\nEnter the event title: ");
+		String eventTitle = scanner.nextLine();
+		Event event = events.searchTitle(eventTitle);
+		if (event != null) {
+			Node<Event> current = events.getHead();
 			while (current != null) {
-				if (((Contact) current.getData()).getEmail().equalsIgnoreCase(e))
-					((Contact) current.getData()).display();
+				if (event.getTitle().equalsIgnoreCase(current.getData().getTitle()))
+					current.getData().getContact().display();
 				current = current.getNext();
 			}
 		} else
-			System.out.println("No contact found!\n");
+			System.out.println("Event not found!\n");
 	}
 
-	public void searchAddress(String a) {
-		current = head;
-		if (current != null) {
-			System.out.println("Contact(s) found!\n");
-			while (current != null) {
-				if (((Contact) current.getData()).getAddress().equalsIgnoreCase(a))
-					((Contact) current.getData()).display();
-				current = current.getNext();
-			}
-		} else
-			System.out.println("No contact found!\n");
-	}
+	public static void main(String[] args) {
+		System.out.println("Welcome to the Linked Tree Phonebook!");
 
-	public void searchBirthday(String b) {
-		current = head;
-		if (current != null) {
-			System.out.println("Contact(s) found!\n");
-			while (current != null) {
-				if (((Contact) current.getData()).getBirthDay().equalsIgnoreCase(b))
-					((Contact) current.getData()).display();
-				current = current.getNext();
-			}
-		} else
-			System.out.println("No contact found!\n");
-	}
+		while (true) {
+			System.out.println("Please choose an option:");
+			System.out.println("1. Add a contact");
+			System.out.println("2. Search for a contact");
+			System.out.println("3. Delete a contact");
+			System.out.println("4. Schedule an event");
+			System.out.println("5. Print event details");
+			System.out.println("6. Print contacts by first name");
+			System.out.println("7. Print all events alphabetically");
+			System.out.println("8. Print all Contacts sharing Event");
+			System.out.println("9. Exit\n");
 
-	public boolean deleteContact(String n) {
-		if (empty())
-			return false;
-
-		current = head;
-		while (current != null) {
-			if (((Contact) current.getData()).getName().equalsIgnoreCase(n)) {
-				if (current == head) {
-					head = current.getNext();
-				} else {
-					Node<T> prev = head;
-					while (prev.getNext() != current)
-						prev = prev.getNext();
-					prev.setNext(current.getNext());
-				}
-				return true;
+			System.out.print("Enter your choice: ");
+			int choice;
+			try {
+				choice = scanner.nextInt();
+				scanner.nextLine();
+			} catch (InputMismatchException e) {
+				System.out.println("Invalid input. Please enter a valid option. (1-9)");
+				scanner.nextLine();
+				continue;
 			}
-			current = current.getNext();
+			switch (choice) {
+			case 1:
+				addContact();
+				break;
+			case 2:
+				searchContacts();
+				break;
+			case 3:
+				deleteContact();
+				break;
+			case 4:
+				addEvent();
+				break;
+			case 5:
+				printEvent();
+				break;
+			case 6:
+				printContactsByFirstName();
+				break;
+			case 7:
+				printAllEventsAlphabetically();
+				break;
+			case 8:
+				printAllContactsSharingEvent();
+				break;
+			case 9:
+				System.out.println("Goodbye!");
+				System.exit(0);
+				break;
+			default:
+				System.out.println("Invalid choice. Please choose a valid option.");
+			}
+
 		}
-		return false;
 	}
-
-	public Node<T> getHead() {
-		return head;
-	}
-
-	public void setHead(Node<T> head) {
-		this.head = head;
-	}
-
 }
