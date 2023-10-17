@@ -99,9 +99,9 @@ public class Phonebook {
 		Contact contactToDelete = contacts.searchName(contactName);
 		if (contactToDelete != null && events.getHead() != null)
 			deleteEventsByContact(contactToDelete);
-		if (contacts.deleteContact(contactName))
+		if (contacts.deleteContact(contactName)) {
 			System.out.println("Contact and related events (if any) are deleted successfully!\n");
-		else {
+		} else {
 			System.out.println("Delete unsuccessful.\n");
 		}
 	}
@@ -118,19 +118,8 @@ public class Phonebook {
 		String location = scanner.nextLine();
 		Event event = new Event(title, contact, dateAndTime, location);
 		events.add(event);
+		contact.addContactEvent(event);
 		System.out.println("\nEvent scheduled successfully!\n");
-	}
-
-	public static void findContactEvents(String name) {
-		Node<Event> current = events.getHead();
-
-		while (current != null) {
-			Event event = current.getData();
-			if (event.getContactName().equalsIgnoreCase(name)) {
-				event.display();
-			}
-			current = current.getNext();
-		}
 	}
 
 	public static void printEvent() {
@@ -149,7 +138,11 @@ public class Phonebook {
 		case 1:
 			System.out.println("\nEnter the contact's name: ");
 			String contactName = scanner.nextLine();
-			findContactEvents(contactName);
+			Contact contact = contacts.searchName(contactName);
+			if (contact != null)
+				contact.getEvents();
+			else
+				System.out.println("Contact not found!");
 			break;
 		case 2:
 			System.out.println("\nEnter the event title: ");
@@ -170,15 +163,17 @@ public class Phonebook {
 		System.out.println("\nEnter the first name: ");
 		String firstName = scanner.nextLine();
 		Node<Contact> current = contacts.getHead();
-		while (current != null) {
-			String fullName = current.getData().getName();
-			String[] nameParts = fullName.split(" ");
+		if (current != null)
+			while (current != null) {
+				String fullName = current.getData().getName();
+				String[] nameParts = fullName.split(" ");
 
-			if (nameParts.length > 0 && nameParts[0].equalsIgnoreCase(firstName))
-				current.getData().display();
+				if (nameParts.length > 0 && nameParts[0].equalsIgnoreCase(firstName))
+					current.getData().display();
 
-			current = current.getNext();
-		}
+				current = current.getNext();
+			} else
+				System.out.println("\nNo contact(s) found.\n");
 
 	}
 
@@ -192,7 +187,7 @@ public class Phonebook {
 				current = current.getNext();
 			}
 		} else
-			System.out.println("No events found!");
+			System.out.println("\nNo events found!\n");
 	}
 
 	public static void printAllContactsSharingEvent() {
