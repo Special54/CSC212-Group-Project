@@ -42,7 +42,6 @@ public class LinkedList<T> {
 					}
 					newNode.setNext(head);
 					head = newNode;
-					System.out.println("\nEvent scheduled successfully!\n");
 				} else {
 					Node<T> current = head.getNext();
 					Node<T> prev = head;
@@ -123,11 +122,12 @@ public class LinkedList<T> {
 			while (current != null) {
 				if (((Contact) current.getData()).getPhoneNum().equalsIgnoreCase(p)) {
 					((Contact) current.getData()).display();
+					return;
 				}
 				current = current.getNext();
 			}
 		} else
-			System.out.println("Contact not found!");
+			System.out.println("\nContact not found!\n");
 
 	}
 
@@ -155,7 +155,6 @@ public class LinkedList<T> {
 			}
 		} else
 			System.out.println("No contact found!\n");
-
 	}
 
 	public void searchBirthday(String b) {
