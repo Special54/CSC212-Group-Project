@@ -22,39 +22,41 @@ public class LinkedList<T> {
 		return true;
 	}
 
-	public void add(T data) {
+	public boolean add(T data) {
 		if (data instanceof Event) {
 			Event newEvent = (Event) data;
 			Node<T> newNode = new Node<>(data);
 			if (newEvent.getContact() != null) {
 				String newEventTitle = newEvent.getTitle();
 				String newEventDateTime = newEvent.getDateTime();
-
 				if (empty()) {
 					head = newNode;
+					System.out.println("\nEvent scheduled successfully!\n");
+					return true;
 				} else if (newEventTitle.compareTo(((Event) head.getData()).getTitle()) < 0) {
 					if (newEvent.getContact().equals(((Event) head.getData()).getContact())) {
 						String existingEventDate = ((Event) head.getData()).getDateTime();
 						if (existingEventDate.equals(newEventDateTime)) {
 							System.out.println("Event scheduling failed because its conflicting with another event.");
-							return;
+							return false;
 						}
 					}
 					newNode.setNext(head);
 					head = newNode;
+					System.out.println("\nEvent scheduled successfully!\n");
+					return true;
 				} else {
-					Node<T> current = head.getNext();
-					Node<T> prev = head;
+					Node<T> current = head;
+					Node<T> prev = null;
 
 					while (current != null) {
 						Event currentEvent = (Event) current.getData();
 						String currentEventTitle = currentEvent.getTitle();
 						String currentEventDateTime = currentEvent.getDateTime();
-
 						if (newEvent.getContact().equals(currentEvent.getContact())
 								&& newEventDateTime.equals(currentEventDateTime)) {
 							System.out.println("Event scheduling failed: conflicting with another event.");
-							return;
+							return false;
 						}
 						if (newEventTitle.compareTo(currentEventTitle) < 0) {
 							if (prev == null) {
@@ -64,24 +66,27 @@ public class LinkedList<T> {
 								prev.setNext(newNode);
 								newNode.setNext(current);
 							}
-							return;
+							System.out.println("\nEvent scheduled successfully!\n");
+							return true;
 						}
 						prev = current;
 						current = current.getNext();
 					}
 					prev.setNext(newNode);
 				}
-			} else
+			} else {
 				System.out.println("Contact not found in the contacts' list!");
+				return false;
+			}
 		}
 		if (data instanceof Contact) {
 			if (isContactUnique(data)) {
 				Node<T> newNode = new Node<T>(data);
 				Node<T> current = head;
-
 				if (empty() || ((Contact) data).compareTo((Contact) current.getData()) < 0) {
 					newNode.setNext(head);
 					head = newNode;
+					return true;
 				} else {
 					while (current.getNext() != null
 							&& ((Contact) data).compareTo((Contact) current.getNext().getData()) >= 0) {
@@ -89,9 +94,11 @@ public class LinkedList<T> {
 					}
 					newNode.setNext(current.getNext());
 					current.setNext(newNode);
+					return true;
 				}
 			}
 		}
+		return false;
 	}
 
 	public Contact searchName(String n) {
