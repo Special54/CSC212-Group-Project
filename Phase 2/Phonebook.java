@@ -1,6 +1,5 @@
 import java.util.InputMismatchException;
 import java.util.Scanner;
-import java.util.Iterator;
 
 public class Phonebook {
 	private static ContactBST contacts = new ContactBST();

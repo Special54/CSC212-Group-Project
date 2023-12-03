@@ -28,23 +28,16 @@ public class Contact implements Comparable<Contact> {
 		while (current != null) {
 			Event event = current.getData();
 			if (event.isEvent()) {
-				// If it's an event with multiple contacts
 				event.getContactBST().deleteContact(contactName);
 			} else {
-				// If it's an appointment with a single contact
 				if (event.getContactName().equals(contactName)) {
-					// Remove the contact from the event
 					if (prev == null) {
-						// If the contact is at the head of the list
 						head = current.getNext();
 					} else {
 						prev.setNext(current.getNext());
 					}
-					// Break after removing the contact from the appointment
 				}
 			}
-
-			// Move to the next node
 			prev = current;
 			current = current.getNext();
 		}

@@ -4,7 +4,7 @@ public class Event {
 	private String dateAndTime;
 	private String location;
 	private ContactBST contactBST;
-	private Contact contact;// Binary Search Tree for contacts
+	private Contact contact;
 	
     // Constructor for appointments with a single contact
     public Event(boolean isEvent, String title, String dateAndTime, String location, Contact contact) {
@@ -13,7 +13,7 @@ public class Event {
         this.dateAndTime = dateAndTime;
         this.location = location;
         this.contact = contact;
-        this.contactBST = null; // Set ContactBST to null since there's only a single contact
+        this.contactBST = null;
     }
 
     // Constructor for events with a set of contacts
@@ -22,7 +22,7 @@ public class Event {
         this.title = title;
         this.dateAndTime = dateAndTime;
         this.location = location;
-        this.contact = null; // Set Contact to null since there's a set of contacts
+        this.contact = null;
         this.contactBST = contacts;
     }
 
