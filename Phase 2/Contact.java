@@ -16,9 +16,7 @@ public class Contact implements Comparable<Contact> {
 	}
 
 	public void addContactEvent(Event event) {
-		Node<Event> newNode = new Node<>(event);
-		newNode.setNext(head);
-		head = newNode;
+		contactEvents.add(event);
 	}
 
 	public void removeContactFromEvents(String contactName) {
@@ -45,19 +43,16 @@ public class Contact implements Comparable<Contact> {
 
 	public void displayContactEvents() {
 		System.out.println("Contact's Events:");
-		Node<Event> current = head;
+		Node<Event> current = contactEvents.getHead();
 		while (current != null) {
 			current.getData().display();
 			current = current.getNext();
 		}
 	}
 
-	public void getEvents() {
-		Node<Event> current = head;
-		while (current != null) {
-			current.getData().display();
-			current = current.getNext();
-		}
+
+	public Node<Event> getHead() {
+		return head;
 	}
 
 	public void setHead(Node<Event> head) {

@@ -215,7 +215,7 @@ public class Phonebook {
 			String contactName = scanner.nextLine();
 			Contact contact = contacts.searchContact(contactName);
 			if (contact != null) {
-				contact.getEvents();
+				contact.displayContactEvents();;
 			} else
 				System.out.println("Contact not found!");
 			break;
