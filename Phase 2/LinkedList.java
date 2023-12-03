@@ -11,17 +11,35 @@ public class LinkedList<T> {
 		return head == null;
 	}
 
-	public void add(T data) {
-		Node<T> newNode = new Node<T>(data);
+	public boolean add(T data) {
+		Event newEvent = (Event) data;
+		Node<T> newNode = new Node<>(data);
 
-		if (head == null) {
-			head = newNode;
-		} else {
-			Node<T> current = head;
-			while (current.getNext() != null) {
-				current = current.getNext();
+		if (newEvent.getContact() != null) {
+			String newEventTitle = newEvent.getTitle();
+			if (empty() || newEventTitle.compareTo(((Event) head.getData()).getTitle()) < 0) {
+				newNode.setNext(head);
+				head = newNode;
+				return true;
+			} else {
+				Node<T> current = head;
+				Node<T> prev = null;
+				while (current != null && newEventTitle.compareTo(((Event) current.getData()).getTitle()) > 0) {
+					prev = current;
+					current = current.getNext();
+				}
+
+				newNode.setNext(current);
+				if (prev != null) {
+					prev.setNext(newNode);
+				} else {
+					head = newNode;
+				}
+				return true;
 			}
-			current.setNext(newNode);
+		} else {
+			System.out.println("Contact not found in the contacts' list!");
+			return false;
 		}
 	}
 
